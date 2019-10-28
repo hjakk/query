@@ -1,0 +1,47 @@
+{
+  "name": "@hjk/query",
+  "description": "",
+  "keywords": [
+    "parse",
+    "stringify",
+    "query"
+  ],
+  "version": "0.1.0",
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src/**/*",
+    "clean": "rimraf dist",
+    "build": "npm run clean && npm run build:types && npm run build:cjs && npm run build:es",
+    "build:types": "tsc --pretty --noErrorTruncation --emitDeclarationOnly true --declarationMap true --outDir dist/types",
+    "build:cjs": "tsc --pretty --noErrorTruncation --removeComments --declaration false --outDir dist/cjs",
+    "build:es": "tsc --pretty --noErrorTruncation --removeComments --declaration false -m es6 --outDir dist/es",
+    "prepublishOnly": "npm run lint",
+    "prepare": "npm run build",
+    "preversion": "npm run lint",
+    "version": "git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "author": "hjakk",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hjakk/query.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hjakk/query/issues"
+  },
+  "homepage": "https://github.com/hjakk/query#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
+    "eslint": "^6.0.1",
+    "rimraf": "^2.7.1",
+    "typescript": "^3.5.3"
+  }
+}
