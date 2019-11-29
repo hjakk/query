@@ -7,7 +7,7 @@ function stringify(data: any, prevKey?: string | null): string {
     const _k: string = prevKey ? `${ prevKey }[${ Array.isArray(data) ? '' : key }]` : key
     if (_v !== undefined && _v !== '') {
       if (_q) _q += '&'
-      if (typeof _v === 'object') {
+      if (typeof _v === 'object' && _v !== null) {
         _q += stringify(_v, `${ _k }`)
       }
       else {
