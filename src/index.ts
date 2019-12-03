@@ -19,8 +19,13 @@ function stringify(data: any, prevKey?: string | null): string {
   return _q
 }
 
-function handleNum(value: any): string | number {
-  return /^\d+$/.test(value) ? Number(value) : value
+function handleValue(value: any): string | number | boolean | null | undefined {
+  if (/^\d+$/.test(value)) return Number(value)
+  if (value === 'false') return false
+  if (value === 'true') return true
+  if (value === 'null') return null
+  if (value === 'undefined') return undefined
+  return value
 }
 
 function parse(str: string): { [key: string]: any } | null {
@@ -37,17 +42,17 @@ function parse(str: string): { [key: string]: any } | null {
       const _rootKey: string = _key.replace(/\[\]$|\[(\d+)\]$/, '')
       if (!params[_rootKey]) params[_rootKey] = []
       const index: string[] | null = _key.match(/\[(\d+)\]/)
-      if (index) params[_rootKey][index[1]] = handleNum(_value)
+      if (index) params[_rootKey][index[1]] = handleValue(_value)
       else params[_rootKey].push(_value)
     }
     else if (/\[(.+)\]$/.test(_key)) {
       const _rootKey: string = _key.replace(/\[(.+)\]$/, '')
       if (!params[_rootKey]) params[_rootKey] = {}
       const _k: string[] | null = _key.match(/\[(.+)\]$/)
-      if (_k) params[_rootKey][_k[1]] = handleNum(_value)
+      if (_k) params[_rootKey][_k[1]] = handleValue(_value)
     }
     else {
-      params[_key] = handleNum(_value)
+      params[_key] = handleValue(_value)
     }
   }
   return params
