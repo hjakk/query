@@ -5,7 +5,7 @@ function stringify(data: any, prevKey?: string | null): string {
 
     const _v: any = data[key]
     const _k: string = prevKey ? `${ prevKey }[${ Array.isArray(data) ? '' : key }]` : key
-    if (_v !== undefined && _v !== '') {
+    if (_v !== undefined) {
       if (_q) _q += '&'
       if (typeof _v === 'object' && _v !== null) {
         _q += stringify(_v, `${ _k }`)
@@ -20,7 +20,8 @@ function stringify(data: any, prevKey?: string | null): string {
 }
 
 function handleValue(value: any): string | number | boolean | null | undefined {
-  if (/^\d+$/.test(value)) return Number(value)
+  if (/^[1-9]+$/.test(value)) return Number(value)
+  if (value === '') return ''
   if (value === 'false') return false
   if (value === 'true') return true
   if (value === 'null') return null
