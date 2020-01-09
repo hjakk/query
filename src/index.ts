@@ -1,14 +1,22 @@
-function stringify(data: any, prevKey?: string | null): string {
+type StringifyOptions = {
+  overrides: { [key: string]: any }
+}
+
+function toString(data: any, prevKey?: string | null, options?: StringifyOptions): string {
   let _q = ''
   for (const key in data) {
     if (!data.hasOwnProperty(key)) continue
 
-    const _v: any = data[key]
+    let _v: any = data[key]
+    if (options) {
+      if (options.overrides && String(_v) in options.overrides) _v = options.overrides[String(_v)]
+    }
+
     const _k: string = prevKey ? `${ prevKey }[${ Array.isArray(data) ? '' : key }]` : key
-    if (_v !== undefined) {
+    if (_v !== undefined && _v !== '') {
       if (_q) _q += '&'
       if (typeof _v === 'object' && _v !== null) {
-        _q += stringify(_v, `${ _k }`)
+        _q += toString(_v, `${ _k }`, options)
       }
       else {
         _q += encodeURIComponent(_k)
@@ -19,9 +27,12 @@ function stringify(data: any, prevKey?: string | null): string {
   return _q
 }
 
+function stringify(data: any, options?: StringifyOptions): string {
+  return toString(data, null, options)
+}
+
 function handleValue(value: any): string | number | boolean | null | undefined {
   if (/^[1-9]+$/.test(value)) return Number(value)
-  if (value === '') return ''
   if (value === 'false') return false
   if (value === 'true') return true
   if (value === 'null') return null
