@@ -8,12 +8,16 @@ function toString(data: any, prevKey?: string | null, options?: StringifyOptions
     if (!data.hasOwnProperty(key)) continue
 
     let _v: any = data[key]
+    let _f = false
     if (options) {
-      if (options.overrides && String(_v) in options.overrides) _v = options.overrides[String(_v)]
+      if (options.overrides && String(_v) in options.overrides) {
+        _v = options.overrides[String(_v)]
+        _f = true
+      }
     }
 
     const _k: string = prevKey ? `${ prevKey }[${ Array.isArray(data) ? '' : key }]` : key
-    if (_v !== undefined && _v !== '') {
+    if (_f || (_v !== undefined && _v !== '')) {
       if (_q) _q += '&'
       if (typeof _v === 'object' && _v !== null) {
         _q += toString(_v, `${ _k }`, options)
